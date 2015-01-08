@@ -22,7 +22,8 @@ class Count(Act):
         for i in range(1, 10):
             print i
             # Since we use 'yield' here, the loop does not block the program.
-            # yield saves the state of the function so that when its called, it returns here
+            # yield saves the state of the function so that when its called,
+            # it returns here
             yield ActStatus.RUNNING
         yield ActStatus.SUCCESS
 
@@ -37,13 +38,15 @@ Here's an example of a behavior tree and how to use it:
         print text
         return ActStatus.SUCCESS
         
-    # It's easy to initialize a tree just by specifying the children as a list in the first argument
+    # It's easy to initialize a tree just by specifying the children
+    # as a list in the first argument
     tree = Parallel(
         [
             # These loop through their children N times or until one fails
             Loop(
                 [
-                    # These are an example of how to use lambdas with the behavior tree
+                    # These are an example of how to use
+                    # lambdas with the behavior tree
                     Wrap(lambda: printobj("Hello 1")),
                     Wrap(lambda: printobj("Hello 2"))
                 ], num_iter=10),
