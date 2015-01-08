@@ -16,7 +16,7 @@ Here's an example act that just prints the numbers 1 through 10:
 ```python
 class Count(Act):
     def __init__(self, children=[], name="Count", *args, **kwargs):
-        super(Act, self).__init__(children, name, *args, **kwargs)
+        super(Count, self).__init__(children, name, *args, **kwargs)
     
     def tick(self):
         for i in range(1, 10):
