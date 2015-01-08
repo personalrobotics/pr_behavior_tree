@@ -97,3 +97,6 @@ The output of the test program is:
     Hello 4
     Hello 1
 
+**Suspending and Resuming**
+
+In addition to ticking, `Acts` can be suspended or resumed. An act can override `suspend` and `resume` to do tasks whenever an act has been temporarily put on hold. Sequential acts `suspend` only the current child, while parallel acts `suspend` all children.
