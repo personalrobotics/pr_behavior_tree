@@ -22,8 +22,9 @@ class Count(Act):
         for i in range(1, 10):
             print i
             # Since we use 'yield' here, the loop does not block the program.
-            # yield saves the state of the function so that when its called,
-            # it returns here
+            # yield saves the state of the function so that when it is called again,
+            # the program returns to this line, rather than the beginning of the
+            # function.
             yield ActStatus.RUNNING
         yield ActStatus.SUCCESS
 
