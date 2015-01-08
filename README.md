@@ -1,5 +1,5 @@
 # pr_behavior_tree
-A simple python behavior tree library based on coroutines. 
+A simple python behavior tree library based on coroutines. Loosely based on [pi_trees](https://github.com/pirobot/pi_trees/), but implements the behaviors as coroutines instead of basic functions.
 
 The main class is called `Act`, and represents an atomic node in the behavior tree. All `Act`s have zero or more children. An `Act` with zero children is a leaf. All `Act`s have a coroutine called `tick`. `tick` returns either `FAIL`, `SUCCESS` or `RUNNING` until it is done ticking, at which point it throws a `StopIteration` exception.
 
