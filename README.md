@@ -10,7 +10,7 @@ Additionally, any function that returns `SUCCESS` or `FAIL` can be converted int
 **Example**
 
 Here's an example of a behavior tree and how to use it:
-
+```python
     # Prints an object and returns SUCCESS
     def printobj(text):
         print text
@@ -43,8 +43,10 @@ Here's an example of a behavior tree and how to use it:
     # Run the tree to completion
     for status in tree.iterator:
         pass
+```
         
 The output of the test program is:
+
 
      --> Loop
          --> Wrap                     Wrap(lambda: printobj("Hello 1")),
