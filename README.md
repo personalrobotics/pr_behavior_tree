@@ -64,7 +64,10 @@ Here's an example of a behavior tree and how to use it:
     # Reset the tree's state before running it
     tree.reset()
     
-    # Run the tree to completion
+    # Run the tree to completion. Notice that you don't have to block here.
+    # You can break out of the loop at any time to do other things, and return
+    # to the loop later. If the Act needs to be suspended for a long time, and
+    # then resumed later, call "tree.suspend()" followed by "tree.resume()"
     for status in tree.iterator:
         pass
 ```
