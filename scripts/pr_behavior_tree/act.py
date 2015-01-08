@@ -35,6 +35,12 @@ class Act(object):
     def remove_child(self, child):
         self.children.remove(child)
 
+    def suspend(self):
+        pass
+
+    def resume(self):
+        pass
+
     def __enter__(self):
         return self.name;
 
@@ -55,6 +61,7 @@ class Select(Act):
 
     def tick(self):
         for child in self.children:
+            self.current_child = child
             for status in child.iterator:
                 if status == ActStatus.RUN:
                     yield status
@@ -65,6 +72,18 @@ class Select(Act):
                     return
         yield ActStatus.FAIL
 
+    def suspend(self):
+        if self.current_child:
+            self.current_child.suspend()
+
+    def resume(self):
+        if self.current_child:
+            self.current_child.resume()
+
+    def reset(self):
+        self.current_child = None
+        Act.reset(self)
+
 
 class Sequence(Act):
     """
@@ -73,9 +92,11 @@ class Sequence(Act):
 
     def __init__(self, children = [], name = "Sequence", *args, **kwargs):
         super(Sequence, self).__init__(children, name, *args, **kwargs)
+        self.current_child = None
 
     def tick(self):
         for child in self.children:
+            current_child = child
             for status in child.iterator:
                 if status == ActStatus.RUN:
                     yield status
@@ -87,6 +108,17 @@ class Sequence(Act):
 
         yield ActStatus.SUCCESS
 
+    def suspend(self):
+        if self.current_child:
+            self.current_child.suspend()
+
+    def resume(self):
+        if self.current_child:
+            self.current_child.resume()
+
+    def reset(self):
+        self.current_child = None
+        Act.reset(self)
 
 class Parallel(Act):
     """
@@ -115,6 +147,13 @@ class Parallel(Act):
             except StopIteration:
                 continue
 
+    def suspend(self):
+        for child in self.children:
+            child.suspend()
+
+    def resume(self):
+        for child in self.children:
+            child.resume()
 
 class Loop(Act):
     """
@@ -126,6 +165,7 @@ class Loop(Act):
         super(Loop, self).__init__(children, name, *args, **kwargs)
         self.num_iter = num_iter
         self.iter = 1
+        self.current_child = None
 
     def tick(self):
         while True:
@@ -134,6 +174,7 @@ class Loop(Act):
                 return
 
             for child in self.children:
+                current_child = child
                 for status in child.iterator:
                     if status == ActStatus.RUN:
                         yield status
@@ -146,6 +187,14 @@ class Loop(Act):
             self.iter += 1
         yield ActStatus.SUCCESS
 
+    def suspend(self):
+        if self.current_child:
+            self.current_child.suspend()
+
+    def resume(self):
+        if self.current_child:
+            self.current_child.resume()
+
 
 class IgnoreFail(Act):
     """
@@ -154,6 +203,7 @@ class IgnoreFail(Act):
 
     def __init__(self, children = [], name = "IgnoreFail", *args, **kwargs):
         super(IgnoreFail, self).__init__(children, name, *args, **kwargs)
+        self.current_child = None
 
     def tick(self):
         for child in self.children:
@@ -164,6 +214,14 @@ class IgnoreFail(Act):
                     yield status
         yield ActStatus.SUCCESS
 
+    def suspend(self):
+        if self.current_child:
+            self.current_child.suspend()
+
+    def resume(self):
+        if self.current_child:
+            self.current_child.resume()
+
 
 class Not(Act):
     """
@@ -172,6 +230,7 @@ class Not(Act):
 
     def __init__(self, children = [], name = "Not", *args, **kwargs):
         super(Not, self).__init__(children, name, *args, **kwargs)
+        self.current_child = None
 
     def tick(self):
         for child in self.children:
@@ -183,6 +242,14 @@ class Not(Act):
                 else:
                     yield status
         yield ActStatus.SUCCESS
+
+    def suspend(self):
+        if self.current_child:
+            self.current_child.suspend()
+
+    def resume(self):
+        if self.current_child:
+            self.current_child.resume()
 
 
 class Wrap(Act):
