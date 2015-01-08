@@ -8,6 +8,7 @@ There are special connector `Act`s that update their children in specific ways. 
 Additionally, any function that returns `SUCCESS` or `FAIL` can be converted into an `Act` merely by using the special `Wrap` `Act`. Note that `lambda` functions can also be converted to an `Act` in the same way.
 
 **How to write an Act**
+
 All you need is a class which extends `Act` and has a `tick` function. The `tick` function, since it is a coroutine, uses the `yield` keyword instead of the `return` keyword to return values. `return` may still be used to break out of the coroutine.
 
 Here's an example act that just prints the numbers 1 through 10:
