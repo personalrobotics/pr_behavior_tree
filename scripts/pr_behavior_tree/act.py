@@ -234,6 +234,7 @@ class Not(Act):
 
     def tick(self):
         for child in self.children:
+            current_child = child
             for status in child.iterator:
                 if status == ActStatus.FAIL:
                     yield ActStatus.SUCCESS
@@ -242,6 +243,10 @@ class Not(Act):
                 else:
                     yield status
         yield ActStatus.SUCCESS
+
+    def reset(self):
+        self.current_child = None
+        Act.reset(self)
 
     def suspend(self):
         if self.current_child:
