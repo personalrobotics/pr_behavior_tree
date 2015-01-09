@@ -110,4 +110,15 @@ In addition to ticking, `Acts` can be suspended or resumed. An act can override 
 
 **A Note on Parallelism**
 
-Since `Acts` are *coroutines* and not *threads*, they are never truly run in parallel, and thus can't take advantage of multicore processing. But for the most part, they eliminate the need for threading constructs such as locks. The order of executation is also *deterministic*. It is given by the order of the children in each parallel subtree. For instance, in the example above, we had `Parallel([Sequence([1, 2]), Sequence([3, 4])])` as the tree. The update order is deterministic; it is always a parallel breadth-first traversal of the tree -- `1, 3, 2, 4`. As another example, if we had: `Parallel([Sequence([1, 2]), Sequence([3, 4]), Sequence([5, 6])])` the traversal order would be `1, 3, 5, 2, 4, 6`.
+Since `Acts` are *coroutines* and not *threads*, they are never truly run in parallel, and thus can't take advantage of multicore processing. But for the most part, they eliminate the need for threading constructs such as locks. The order of executation is also *deterministic*. It is given by the order of the children in each parallel subtree. For instance, in the example above, we had `Parallel([Sequence([1, 2]), Sequence([3, 4])])` as the tree. The update order is deterministic; it is always a parallel breadth-first traversal of the tree -- `1, 3, 2, 4`. 
+
+A more complicated example with a loop in parallel:
+
+`Parallel([Loop([1, 2], num_iters=2), Sequence([3, 4]), Sequence([5, 6])])` 
+the traversal order would be `1, 3, 5, 2, 4, 6, 1, 2`. 
+
+But if we instead had:
+
+`Sequence([Loop([1, 2], num_iters=2), Sequence([3, 4]), Sequence([5, 6])])` 
+the traversal order would be `1, 2, 1, 2, 3, 4, 5, 6`. 
+
