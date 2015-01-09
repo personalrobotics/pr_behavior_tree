@@ -146,6 +146,7 @@ class Parallel(Act):
 
             except StopIteration:
                 continue
+        yield ActStatus.FAIL
 
     def suspend(self):
         for child in self.children:
