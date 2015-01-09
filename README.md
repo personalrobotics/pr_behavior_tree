@@ -107,3 +107,7 @@ The output of the test program is:
 **Suspending and Resuming**
 
 In addition to ticking, `Acts` can be suspended or resumed. An act can override `suspend` and `resume` to do tasks whenever an act has been temporarily put on hold. Sequential acts `suspend` only the current child, while parallel acts `suspend` all children.
+
+**A Note on Parallelism**
+
+Since `Acts` are *coroutines* and not *threads*, they are never truly run in parallel, and thus can't take advantage of multicore processing. But for the most part, they eliminate the need for threading constructs such as locks. The order of executation is also *deterministic*. It is given by the order of the children in each parallel subtree. For instance, in the example above, we had `Parallel([Sequence([1, 2]), Sequence([3, 4])])` as the tree. The update order is deterministic; it is always a breadth-first traversal of the tree -- `1, 3, 2, 4`.
